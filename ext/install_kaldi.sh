@@ -10,4 +10,5 @@ make clean
 # make clean (sometimes helpful after upgrading upstream?)
 ./configure --static --static-math=yes --static-fst=yes --use-cuda=no --openblas-root=../tools/OpenBLAS/install
 make depend
+make
 cd ../../

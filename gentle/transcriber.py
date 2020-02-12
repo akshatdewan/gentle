@@ -1,6 +1,7 @@
 import math
 import logging
 import wave
+import time
 
 from gentle import transcription
 
@@ -48,6 +49,7 @@ class MultiThreadedTranscriber:
 
         pool = Pool(min(n_chunks, self.nthreads))
         pool.map(transcribe_chunk, range(n_chunks))
+        time.sleep(0.1)
         pool.close()
         
         chunks.sort(key=lambda x: x['start'])

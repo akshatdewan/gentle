@@ -26,6 +26,9 @@ parser.add_argument(
         '--log', default="INFO",
         help='the log level (DEBUG, INFO, WARNING, ERROR, or CRITICAL)')
 parser.add_argument(
+        '--lang', default="en",
+        help='language of alignment (en, fr)')
+parser.add_argument(
         'audiofile', type=str,
         help='audio file')
 parser.add_argument(
@@ -36,6 +39,7 @@ args = parser.parse_args()
 log_level = args.log.upper()
 logging.getLogger().setLevel(log_level)
 
+lang = args.lang
 disfluencies = set(['uh', 'um'])
 
 def on_progress(p):
@@ -46,12 +50,15 @@ def on_progress(p):
 with open(args.txtfile) as fh:
     transcript = fh.read()
 
-resources = gentle.Resources()
-logging.info("converting audio to 8K sampled wav")
+resources = gentle.Resources(lang)
+if lang == 'en':
+    logging.info("converting audio to 8K sampled wav")
+if lang == 'fr':
+    logging.info("converting audio to 16K sampled wav")
 
-with gentle.resampled(args.audiofile) as wavfile:
+with gentle.resampled(args.audiofile, lang) as wavfile:
     logging.info("starting alignment")
-    aligner = gentle.ForcedAligner(resources, transcript, nthreads=args.nthreads, disfluency=args.disfluency, conservative=args.conservative, disfluencies=disfluencies)
+    aligner = gentle.ForcedAligner(resources, transcript, nthreads=args.nthreads, disfluency=args.disfluency, conservative=args.conservative, disfluencies=disfluencies, lang=lang)
     result = aligner.transcribe(wavfile, progress_cb=on_progress, logging=logging)
 
 fh = open(args.output, 'w') if args.output else sys.stdout

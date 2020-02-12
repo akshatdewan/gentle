@@ -13,10 +13,11 @@ class ForcedAligner():
         self.nthreads = nthreads
         self.transcript = transcript
         self.resources = resources
+        self.lang=kwargs['lang']
         self.ms = metasentence.MetaSentence(transcript, resources.vocab)
         ks = self.ms.get_kaldi_sequence()
-        gen_hclg_filename = language_model.make_bigram_language_model(ks, resources.proto_langdir, **kwargs)
-        self.queue = kaldi_queue.build(resources, hclg_path=gen_hclg_filename, nthreads=nthreads)
+        gen_hclg_filename = language_model.make_bigram_language_model(ks, resources.proto_langdir, resources.nnet_gpu_path, **kwargs)
+        self.queue = kaldi_queue.build(resources, hclg_path=gen_hclg_filename, nthreads=nthreads, lang=self.lang)
         self.mtt = MultiThreadedTranscriber(self.queue, nthreads=nthreads)
 
     def transcribe(self, wavfile, progress_cb=None, logging=None):
@@ -37,7 +38,7 @@ class ForcedAligner():
         if progress_cb is not None:
             progress_cb({'status': 'ALIGNING'})
 
-        words = multipass.realign(wavfile, words, self.ms, resources=self.resources, nthreads=self.nthreads, progress_cb=progress_cb)
+        words = multipass.realign(wavfile, words, self.ms, resources=self.resources, nthreads=self.nthreads, progress_cb=progress_cb, lang=self.lang)
 
         if logging is not None:
             logging.info("after 2nd pass: %d unaligned words (of %d)" % (len([X for X in words if X.not_found_in_audio()]), len(words)))

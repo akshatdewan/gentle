@@ -41,7 +41,6 @@ def make_bigram_lm_fst(word_sequences, **kwargs):
     for word_sequence in word_sequences:
         if len(word_sequence) == 0:
             continue
-
         prev_word = word_sequence[0]
         bigrams[OOV_TERM].add(prev_word) # valid start (?)
 
@@ -94,7 +93,7 @@ def make_bigram_lm_fst(word_sequences, **kwargs):
 
     return output
 
-def make_bigram_language_model(kaldi_seq, proto_langdir, **kwargs):
+def make_bigram_language_model(kaldi_seq, proto_langdir, nnet_gpu_path, **kwargs):
     """Generates a language model to fit the text.
 
     Returns the filename of the generated language model FST.
@@ -109,12 +108,12 @@ def make_bigram_language_model(kaldi_seq, proto_langdir, **kwargs):
     txt_fst_file = tempfile.NamedTemporaryFile(delete=False)
     txt_fst_file.write(txt_fst)
     txt_fst_file.close()
-
     hclg_filename = tempfile.mktemp(suffix='_HCLG.fst')
     try:
         devnull = open(os.devnull, 'wb')
         subprocess.check_output([MKGRAPH_PATH,
                         proto_langdir,
+                        nnet_gpu_path,
                         txt_fst_file.name,
                         hclg_filename],
                         stderr=devnull)
@@ -125,7 +124,8 @@ def make_bigram_language_model(kaldi_seq, proto_langdir, **kwargs):
             pass
         raise e
     finally:
-        os.unlink(txt_fst_file.name)
+        pass
+        #os.unlink(txt_fst_file.name)
 
     return hclg_filename
 

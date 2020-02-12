@@ -35,10 +35,10 @@ def prepare_multipass(alignment):
 
     return to_realign
     
-def realign(wavfile, alignment, ms, resources, nthreads=4, progress_cb=None):
+def realign(wavfile, alignment, ms, resources, nthreads=4, progress_cb=None, lang='en'):
     to_realign = prepare_multipass(alignment)
     realignments = []
-
+    # I can consider that the all the segments to be realigned will be of the same language so I can have a global lang variable
     def realign(chunk):
         wav_obj = wave.open(wavfile, 'r')
 
@@ -65,11 +65,12 @@ def realign(wavfile, alignment, ms, resources, nthreads=4, progress_cb=None):
         chunk_ms = metasentence.MetaSentence(chunk_transcript, resources.vocab)
         chunk_ks = chunk_ms.get_kaldi_sequence()
 
-        chunk_gen_hclg_filename = language_model.make_bigram_language_model(chunk_ks, resources.proto_langdir)
+        chunk_gen_hclg_filename = language_model.make_bigram_language_model(chunk_ks, resources.proto_langdir, resources.nnet_gpu_path)
         k = standard_kaldi.Kaldi(
             resources.nnet_gpu_path,
             chunk_gen_hclg_filename,
-            resources.proto_langdir)
+            resources.proto_langdir,
+            lang)
 
         wav_obj = wave.open(wavfile, 'r')
         wav_obj.setpos(int(start_t * wav_obj.getframerate()))

@@ -10,7 +10,7 @@
 #include "lat/word-align-lattice.h"
 
 const int arate = 8000;
-    
+ 
 void ConfigFeatureInfo(kaldi::OnlineNnet2FeaturePipelineInfo& info,
                        std::string ivector_model_dir) {
     // Configure inline to avoid absolute paths in ".conf" files

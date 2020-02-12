@@ -2,13 +2,17 @@ import subprocess
 from util.paths import get_binary
 import os
 
-EXECUTABLE_PATH = get_binary("ext/k3")
+EXECUTABLE_PATH_EN = get_binary("ext/k3")
+EXECUTABLE_PATH_FR = get_binary("ext/k3-kaldi-5.4")
 
 class Kaldi:
-    def __init__(self, nnet_dir=None, hclg_path=None, proto_langdir=None):
+    def __init__(self, nnet_dir=None, hclg_path=None, proto_langdir=None, lang='en'):
         devnull = open(os.devnull, 'w')
         
-        cmd = [EXECUTABLE_PATH]
+        if lang == 'en':
+            cmd = [EXECUTABLE_PATH_EN]
+        if lang == 'fr':
+            cmd = [EXECUTABLE_PATH_FR]
         
         if nnet_dir is not None:
             cmd.append(nnet_dir)
@@ -26,7 +30,7 @@ class Kaldi:
     def push_chunk(self, buf):
         # Wait until we're ready
         self._cmd("push-chunk")
-        
+
         cnt = len(buf)/2
         self._cmd(str(cnt))
         self._p.stdin.write(buf) #arr.tostring())
@@ -73,7 +77,7 @@ if __name__=='__main__':
     import sys
 
     infile = sys.argv[1]
-    
+
     k = Kaldi()
 
     buf = numm3.sound2np(infile, nchannels=1, R=8000)

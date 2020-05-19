@@ -27,7 +27,7 @@ parser.add_argument(
         help='the log level (DEBUG, INFO, WARNING, ERROR, or CRITICAL)')
 parser.add_argument(
         '--lang', default="en",
-        help='language of alignment (en, fr)')
+        help='language of alignment (en, fr, es)')
 parser.add_argument(
         'audiofile', type=str,
         help='audio file')
@@ -54,6 +54,8 @@ resources = gentle.Resources(lang)
 if lang == 'en':
     logging.info("converting audio to 8K sampled wav")
 if lang == 'fr':
+    logging.info("converting audio to 16K sampled wav")
+if lang == 'es':
     logging.info("converting audio to 16K sampled wav")
 
 with gentle.resampled(args.audiofile, lang) as wavfile:

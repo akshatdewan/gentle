@@ -32,6 +32,14 @@ def resample(infile, outfile, lang='en'):
                                 '-ac', '1', '-ar', '16000',
                                 '-acodec', 'pcm_s16le',
                                 outfile])
+    if lang == 'es':
+        return subprocess.call([FFMPEG,
+                                '-loglevel', 'panic',
+                                '-y',
+                                '-i', infile,
+                                '-ac', '1', '-ar', '16000',
+                                '-acodec', 'pcm_s16le',
+                                outfile])
 
 @contextmanager
 def resampled(infile, lang):

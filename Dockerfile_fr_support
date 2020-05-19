@@ -1,5 +1,6 @@
 FROM lowerquality/gentle
 
+#copy the fr_exp models and all
 COPY . /gentle
 
 RUN DEBIAN_FRONTEND=noninteractive && \
@@ -14,17 +15,6 @@ RUN MAKEFLAGS=' -j8' cd /gentle/ext && \
 	./install_kaldi.sh && \
         make -f Makefile && rm -rf kaldi *.o
 
-# Instead of building this again, I am copying 
-#cp ./ext/m3 /gentle/ext/m3.new
-#./ext/m3
-#./ext/m3.new 
-#cp -r /data/s2t/speech_tools/gentle/gentle/ .
-#cp -r /data/s2t/speech_tools/gentle/align.py .
-#cp -r /data/s2t/speech_tools/gentle/exp/fr_exp/ exp/
-#cd ext
-#mv m3 m3.old
-#mv m3.new m3
-
 RUN MAKEFLAGS=' -j8' cd /gentle/ext && \
 	./install_kaldi-5.4.sh && \
-        make -f Makefile_fr && rm -rf kaldi *.o
+        make -f Makefile_fr && rm -rf kaldi-5.4 *.o

@@ -16,6 +16,10 @@ class Resources():
             self.proto_langdir= get_resource('exp/fr_exp/langdir')
             self.nnet_gpu_path = get_resource('exp/fr_exp/tdnn_6z_ceos_sp_online/')
             self.full_hclg_path = get_resource('exp/fr_exp/tdnn_6z_ceos_sp_online/graph_pp/HCLG.fst')
+        elif lang == "es":
+            self.proto_langdir= get_resource('exp/es_exp/langdir')
+            self.nnet_gpu_path = get_resource('exp/es_exp/tdnn1a_sp_online/')
+            self.full_hclg_path = get_resource('exp/es_exp/tdnn1a_sp_online/graph_pp/HCLG.fst')
         else:
             raise RuntimeError("%s is not supported" %lang)
 

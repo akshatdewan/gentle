@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 	using namespace fst;
 	using fst::script::ArcSort;
 	try {
-		const char *usage = "Usage: ./mkgraph [options] <lang_dir> <nnet_dir> <grammar-fst> <out-fst>\n";
+		const char *usage = "Usage: ./mkgraph [options] <lang_dir> <nnet_dir> <grammar-fst> <out-fst> [CD-size]\n";
 
 		ParseOptions po(usage);
 		po.Read(argc, argv);
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 			return 1;
 		}
 
-		int32 N = 3, P = 1;
+		int32 N=3, P = 1;
 		float transition_scale = 1.0;
 		float self_loop_scale = 0.1;
 
@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
 					nnet_dir = po.GetArg(2),
 					grammar_fst_filename = po.GetArg(3),
 					out_filename = po.GetArg(4);
+                N = po.GetOptArg(5);
 
 		std::string lang_fst_filename = lang_dir + "/L.fst",
 			lang_disambig_fst_filename = lang_dir + "/L_disambig.fst",

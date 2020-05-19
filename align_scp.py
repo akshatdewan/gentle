@@ -50,7 +50,7 @@ parser.add_argument(
         help='the log level (DEBUG, INFO, WARNING, ERROR, or CRITICAL)')
 parser.add_argument(
         '--lang', default="en",
-        help='language of alignment (en, fr)')
+        help='language of alignment (en, fr, es)')
 #parser.add_argument(
 #        'audiofile', type=str,
 #        help='audio file')
@@ -83,6 +83,18 @@ if lang == 'en':
     logging.info("converting audio to 8K sampled wav")
 if lang == 'fr':
     logging.info("converting audio to 16K sampled wav")
+if lang == 'es':
+    logging.info("converting audio to 16K sampled wav")
+
+import psutil
+def kill_child_processes(parent_pid, sig=signal.SIGKILL):
+    try:
+        parent = psutil.Process(parent_pid)
+    except psutil.NoSuchProcess:
+        return
+    children = parent.children(recursive=True)
+    for process in children:
+        process.send_signal(sig)
 
 def align_pair(item):
     try:
@@ -92,7 +104,6 @@ def align_pair(item):
         
         with gentle.resampled(audiofile, lang) as wavfile:
             logging.info("starting alignment for %s" % (audiofile))
-            print args
             aligner = gentle.ForcedAligner(resources, transcript, nthreads=args.nthreads, disfluency=args.disfluency, conservative=args.conservative, disfluencies=disfluencies, lang=lang)
             result = aligner.transcribe(wavfile, progress_cb=on_progress, logging=logging)
         
@@ -110,8 +121,10 @@ for item in scp:
     p = multiprocessing.Process(target=align_pair, args=(item,))
     p.daemon=True
     p.start()
-    p.join(timeout=500)
+    p.join(timeout=250)
     try:
+        kill_child_processes(p.pid)
         os.kill(p.pid, signal.SIGKILL)
-    except OSError:
-        pass
+        continue
+    except OSError as e:
+        print(e)

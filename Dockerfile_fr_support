@@ -12,9 +12,9 @@ RUN DEBIAN_FRONTEND=noninteractive && \
         apt-get install -y gfortran sox
 
 RUN MAKEFLAGS=' -j8' cd /gentle/ext && \
-	./install_kaldi.sh && \
+	./install_kaldi.sh 48 && \
         make -f Makefile && rm -rf kaldi *.o
 
 RUN MAKEFLAGS=' -j8' cd /gentle/ext && \
-	./install_kaldi-5.4.sh && \
+	./install_kaldi-5.4.sh 48 && \
         make -f Makefile_fr && rm -rf kaldi-5.4 *.o

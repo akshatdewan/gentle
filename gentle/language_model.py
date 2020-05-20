@@ -109,13 +109,18 @@ def make_bigram_language_model(kaldi_seq, proto_langdir, nnet_gpu_path, **kwargs
     txt_fst_file.write(txt_fst)
     txt_fst_file.close()
     hclg_filename = tempfile.mktemp(suffix='_HCLG.fst')
+    if kwargs['lang'] == 'es':
+        context_dep = '2'
+    else:
+        context_dep = '3'
     try:
         devnull = open(os.devnull, 'wb')
         subprocess.check_output([MKGRAPH_PATH,
                         proto_langdir,
                         nnet_gpu_path,
                         txt_fst_file.name,
-                        hclg_filename],
+                        hclg_filename,
+                        context_dep],
                         stderr=devnull)
     except Exception, e:
         try:

@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
 		ParseOptions po(usage);
 		po.Read(argc, argv);
-		if (po.NumArgs() != 4) {
+		if (po.NumArgs() < 4) {
 			po.PrintUsage();
 			return 1;
 		}
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 					nnet_dir = po.GetArg(2),
 					grammar_fst_filename = po.GetArg(3),
 					out_filename = po.GetArg(4);
-                N = po.GetOptArg(5);
+                N = std::stoi(po.GetOptArg(5));
 
 		std::string lang_fst_filename = lang_dir + "/L.fst",
 			lang_disambig_fst_filename = lang_dir + "/L_disambig.fst",

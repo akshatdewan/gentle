@@ -4,7 +4,7 @@ all:
 EXTRA_CXXFLAGS = -Wno-sign-compare
 include $(KALDI_BASE)kaldi.mk
 
-BINFILES = k3,m3
+BINFILES = k3 m3
 
 OBJFILES =
 

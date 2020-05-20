@@ -12,7 +12,7 @@ class Kaldi:
         if lang == 'en':
             cmd = [EXECUTABLE_PATH_EN]
         if lang == 'es':
-            cmd = [EXECUTABLE_PATH_EN]
+            cmd = [EXECUTABLE_PATH_FR]
         if lang == 'fr':
             cmd = [EXECUTABLE_PATH_FR]
         

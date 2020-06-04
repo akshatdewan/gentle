@@ -65,7 +65,7 @@ def realign(wavfile, alignment, ms, resources, nthreads=4, progress_cb=None, lan
         chunk_ms = metasentence.MetaSentence(chunk_transcript, resources.vocab)
         chunk_ks = chunk_ms.get_kaldi_sequence()
 
-        chunk_gen_hclg_filename = language_model.make_bigram_language_model(chunk_ks, resources.proto_langdir, resources.nnet_gpu_path)
+        chunk_gen_hclg_filename = language_model.make_bigram_language_model(chunk_ks, resources.proto_langdir, resources.nnet_gpu_path, lang=lang)
         k = standard_kaldi.Kaldi(
             resources.nnet_gpu_path,
             chunk_gen_hclg_filename,
